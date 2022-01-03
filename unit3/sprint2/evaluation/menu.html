@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      #navBar {
+        border: 3px solid purple;
+        display: flex;
+        text-align: left;
+        background-color: powderblue;
+      }
+      #navBar > button {
+        border: none;
+        margin: 2%;
+        cursor: pointer;
+      }
+
+      #container > div {
+        display: grid;
+  
+      }
+      #container > div {
+  
+        margin-left: 1%;
+      }
+      img {
+        width: 200px;
+  
+      }
+      button {
+        width: 150px;
+        height: 50px;
+        background-color: pink;
+        border: 3px solid red;
+        color: black;
+        font-size: 15px;
+        border-radius: 5px;
+      }
+      a {
+        margin-top: 2%;
+
+        width: 150px;
+        height: 50px;
+        margin-left: 20px;
+        font-size: 15px;
+      }
+      a > button {
+        border: none;
+        font-size: 15px;
+        border-radius: 5px;
+      }
+      #cart{
+        position: fixed;
+            top: 10px;
+            right: 30px;
+            font-size: 30px;
+             font-weight: bolder; 
+            display: inline-block;
+      }
+    </style>
+  </head>
+  <body>
+    
+    <div id="navBar">
+      <button>login</button>
+      <button>signUp</button>
+      <button onclick="menu()">menu option</button>
+      <a href="cart.html"><button>cart</button></a>
+    </div>
+
+    <div id="container"></div>
+    <div id="cart">  0</div>
+  </body>
+</html>
+
+<script>
+
+let container = document.getElementById("container");
+  let count = 0;
+    let cart = JSON.parse(localStorage.getItem("cartdish")) || [] ;
+    document.getElementById("cart").textContent = cart.length;
+
+
+  async function menu() {
+    let res = await fetch(
+      `https://www.themealdb.com/api/json/v1/1/categories.php`
+    );
+    let data = await res.json();
+    console.log(data);
+
+    showDish(data.categories);
+  }
+  menu();
+
+  function showDish(categories) {
+   
+
+    categories.forEach(function (categories) {
+      let div = document.createElement("div");
+      div.style.display = "inline-block";
+      div.style.display = "space-between"
+
+
+      let name = document.createElement("h3");
+      name.textContent = categories.strCategory;
+      name.style.color="purple"
+
+      let img = document.createElement("img");
+      img.setAttribute("src", categories.strCategoryThumb);
+
+     
+
+      let price = document.createElement("h5");
+       price.textContent =  "₹" + " "+ Math.floor(Math.random()*(500-100)+100)
+       price.style.color = "purple"
+
+      let button = document.createElement("button");
+      button.textContent = "Add to Card";
+      button.addEventListener("click", function () {
+        let col = count++;
+        addToCart(categories);
+      });
+      let hr = document.createElement("hr")
+
+     
+
+      div.append(img, name, price, button,hr);
+
+      container.append(div);
+    });
+
+    function addToCart(categories) {
+      cart.push(categories);
+      localStorage.setItem("cartdish", JSON.stringify(cart));
+      window.location.reload();
+    }
+  }
+</script>
+

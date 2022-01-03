@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            display: inline-block;
+        }
+        button{
+            width: 160px;
+            height: 40px;
+            background-color: tomato;
+            color: black;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        img{
+            width: 200px;
+        }
+        h1{
+            color: violet;
+        }
+    </style>
+</head>
+<body>
+    <h1 id = "total"></h1>    
+</body>
+</html>
+<script>
+
+    var cartItems = JSON.parse(localStorage.getItem("cartdish"));
+    let array = [];
+    let cost = document.getElementById("total")
+    console.log(cartItems);
+
+    displayItem(cartItems);
+
+    
+
+    function displayItem(product){
+       product.map(function(categories,index){
+        var h1 = document.createElement("h1")
+        h1.textContent = categories.name;
+        let name = document.createElement("h3");
+      name.textContent = categories.strCategory;
+      name.style.color = "purple"
+
+      let img = document.createElement("img");
+      img.setAttribute("src", categories.strCategoryThumb);
+
+    
+      let price = document.createElement("h5");
+       price.textContent =  Math.floor(Math.random()*(500-100)+100);
+       price.style.color = "purple"
+
+      let button = document.createElement("button")
+      button.textContent = "remove from cart"
+      button.addEventListener("click", function () {
+        removeToCart(index);
+      });
+      let hr =document.createElement("hr")
+      
+ 
+        document.querySelector("body").append(img,  name,  price,button,hr); 
+         array.push(price.textContent)
+        console.log(array)
+       });
+    }
+    
+
+
+    function removeToCart(index) {
+        cartItems.splice(index, 1);
+       
+        localStorage.setItem("cartdish", JSON.stringify(cartItems));
+        
+        window.location.reload();
+    }
+  
+       var total = array.reduce(function(acc,cv){
+        return acc+Number(cv);
+       },0);
+       cost.textContent = `Total = ${total}`;
+       localStorage.setItem("totalAmount" , JSON.stringify(total) );
+       console.log(total)
+       document.querySelector("#total").innerHTML=`<h1>  Total Cost is ₹  ${total}</h1><button onClick="GoToCheckut()">checkout</button>`
+        function GoToCheckut(){
+        window.location.href="checkout.html";
+       }
+
+</script>
